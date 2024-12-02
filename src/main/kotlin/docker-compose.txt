@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: downdetector
+      POSTGRES_PASSWORD: downdetector
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend:
+    build: 
+      context: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/downdetector
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=downdetector
+
+volumes:
+  postgres-data:
